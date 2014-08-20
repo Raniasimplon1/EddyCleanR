@@ -2,11 +2,12 @@
 # title         : TheECCleaner-AllFiles.R;
 # purpose       : function to clean eddy covariance data for automation of
 #               : pivot irrigation for the IRRI ecological intensification plots;
-# producer      : prepared by A. Sparks;
-# last update   : in Los Baños, Phliippines, March 2013;
+# producer      : prepared by A. H. Sparks;
+# last update   : in Los Baños, Phliippines, August 2014;
 # inputs        : .dat files from eddy covariance towers;
 # outputs       : cleaned eddy covariance data as a .csv file;
-# comments      : e-mailing the output not yet implemented but planned;
+# comments      : provided as-is, no guarantees;
+# licence       : GPL2;
 ##############################################################################
 
 # Step 1: Load all the libraries necessary for this function to work
@@ -16,18 +17,18 @@ library(plyr)
 library(zoo)
 
 # Step 2: Start the real work
-if(file.exists('Output') == FALSE) dir.create('Output') # check to see if output directory exists, if not create
+if(file.exists("Output") == FALSE) dir.create("Output") # check to see if output directory exists, if not create
 
 cleaner <- function(directory){
   
-  filenames <- list.files(directory, pattern = '.dat$', full.names = TRUE)
+  filenames <- list.files(directory, pattern = ".dat$", full.names = TRUE)
   datalist <- lapply(filenames, function(x) {read.table(file = x, 
                                                         skip = 4, # skip importing the first four lines of headers and whatnot
-                                                        sep = ',', # the original data is parsed with commas
-                                                        na.strings = 'NAN')}) # replace NAN with NA in R for missing values)
+                                                        sep = ",", # the original data is parsed with commas
+                                                        na.strings = "NAN")}) # replace NAN with NA in R for missing values)
   dataFile <- Reduce(function(x, y) {rbind(x, y)}, datalist) 
     
-  dataFile[, 1] <- as.POSIXct(strptime(dataFile[, 1], format = '%Y-%m-%d %H:%M:%S')) # format column 1 to be date/time in R
+  dataFile[, 1] <- as.POSIXct(strptime(dataFile[, 1], format = "%Y-%m-%d %H:%M:%S")) # format column 1 to be date/time in R
   data.i <- dataFile[, c(1, 5, 62)] # create dataframe of only the columns necessary for filling and filtering
   
   w <- sapply(data.i, function(x) any(is.na(x))) # check for any missing values in the data
@@ -54,11 +55,11 @@ cleaner <- function(directory){
                        data.i[, 2], 
                        FilteredT$y, 
                        data.i[, 3]) # create dataframe and format date, w/ cleaned/uncleaned data
-  names(output) <- c('Date', 'FilteredLE', 'UnfilteredLE', 'FilteredT', 'UnfilteredT') # name columns properly
+  names(output) <- c("Date", "FilteredLE", "UnfilteredLE", "FilteredT", "UnfilteredT") # name columns properly
   
   output <- mutate(output, et = FilteredLE/(2500-2.4*FilteredT)*3.6) #Calculate et values for each .5hr unit
   
-  write.csv(output, paste(substr(directory, 1, 48), 'Output/Cleaned_Data.csv', sep = ''), row.names = FALSE) # write the data into a .csv file for saving on server and e-mailing (to be added later) 
+  write.csv(output, paste(substr(directory, 1, 48), "Output/Cleaned_Data.csv", sep = ""), row.names = FALSE) # write the data into a .csv file for saving on server and e-mailing (to be added later) 
 }
 
 theCleaner <- cmpfun(cleaner) # byte compile the function for just a touch more speed
