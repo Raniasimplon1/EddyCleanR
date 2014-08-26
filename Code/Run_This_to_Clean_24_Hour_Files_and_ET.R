@@ -1,5 +1,5 @@
 ##############################################################################
-# title         : Twenty_Four_Hour_Clean_and_ET.R;
+# title         : Run_This_to_Clean_24_Hour_Files_and_ET.R;
 # purpose       : function to clean eddy covariance data for automation of
 #               : pivot irrigation for the IRRI ecological intensification plots;
 # producer      : prepared by A. Sparks;
@@ -11,7 +11,7 @@
 ##############################################################################
 
 # Step 1: Source the external file that contains the cleaning function in it.
-source("TheECCleaner.R")
+source("Clean_24_Hour_Files.R")
 
 # Step 2: (optional so commented out) Read the help file that explains the methods being used to clean the data.
 #?na.approx # fills missing data values

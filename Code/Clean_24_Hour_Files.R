@@ -1,5 +1,5 @@
 ##############################################################################
-# title         : TheECCleaner.R;
+# title         : Clean_24_hour_files.R;
 # version       : 2.0;
 # purpose       : function to clean eddy covariance data for automation of
 #               : pivot irrigation for the IRRI ecological intensification plots;

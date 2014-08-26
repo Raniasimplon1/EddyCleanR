@@ -1,5 +1,5 @@
 ##############################################################################
-# title         : Clean_All_Files.R;
+# title         : Run_This_to_Clean_All_Files_in_Directory.R;
 # purpose       : function to clean eddy covariance data for automation of
 #               : pivot irrigation for the IRRI ecological intensification plots;
 # producer      : prepared by A. H. Sparks;
@@ -11,7 +11,7 @@
 ##############################################################################
 
 # Step 1: Source the external file that contains the cleaning function in it.
-source("src/TheECCleaner.R")
+source("Clean_All_Files.R")
 
 # Step 2: (optional so commented out) Read the help file that explains the methods being used to clean the data.
 #?zoo # fills missing data values
