@@ -2,3 +2,5 @@ irri-eddy-covariance.Rproj
 Documentation
 .Rproj.user
 .Rhistory
+
+*.Rproj
