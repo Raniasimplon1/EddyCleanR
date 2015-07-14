@@ -1,0 +1,16 @@
+Package: IRRIEddyCoClean
+Type: Package
+Title: Functions to filter and gap fill eddy covariance data
+Version: 0.1
+Date: 2015-06-23
+Authors@R: person("Adam", "Sparks", email = "adamhsparks@gmail.com",
+  role = c("aut", "cre"))
+Maintainer: Adam H Sparks, <adamhsparks@gmail.com>
+Description: This package provides functions to filter and gap fill eddy
+    covariance data to calcuate evapotranspiration (ET) values. The
+    International Rice Research Institute (IRRI) uses it to calculate
+    irrigation needs for the Ecological Intensification research platform.
+Depends: R (>= 3.0.0)
+License: GPL (>= 3)
+LazyData: TRUE
+Imports: pracma, plyr, dplyr, zoo, lubridate, sqldf, stringr
