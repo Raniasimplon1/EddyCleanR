@@ -139,7 +139,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
   daily_et <- mean(cleaned$et)/2
 
   # write the data into a .csv file for saving
-  write.csv(cleaned, paste(substr(directory, 1, 48), "cleaned/",
+  write.csv(cleaned, paste(directory, "/cleaned/",
                            substr(end, 1, 10), ".csv", sep = ""))
 
   # return the ET calculation value
