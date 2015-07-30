@@ -83,11 +83,11 @@ clean_all_files <- function(directory = "~/Eddy Covariance Data/",
                      "FilteredT", "UnfilteredT")
 
   # Calculate et values for each .5hr unit
-  Cleaned <- mutate(Cleaned, et = FilteredLE/(2500-2.4*FilteredT)*3.6)
+  Cleaned <- mutate(Cleaned, et = FilteredLE/(2500 - 2.4 * FilteredT) * 3.6)
 
   # write the data into a .csv file for saving
-  write.csv(Cleaned, paste(substr(directory, 1, 48),
-                          "Cleaned/Cleaned_Data.csv", sep = ""),
+  write.csv(Cleaned, paste(directory,
+                          "/Cleaned/Cleaned_Data.csv", sep = ""),
             row.names = FALSE)
 }
 
