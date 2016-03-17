@@ -18,13 +18,18 @@
 #'and are outside of IRRI HQ
 #'
 #' @examples
-
+#' \dontrun{
 #' clean_one_day(directory = "~/Eddy Covariance Data/")
+#' }
 #'
+#'@export
 
 clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                           time_zone = "Asia/Manila"){
 
+  
+  Filtered_LE <- Filtered_T <-NULL
+  
   setwd(directory)
 
   # check to see if cleaned directory exists, if not create
@@ -37,20 +42,20 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
   # The filenaming convention means that we have to go back to previous for
   # the date, to determine the file from current
   # What day was the day before yesterday, according to the system clock?
-  previous <- as.Date(today(time_zone) - 2)
+  previous <- as.Date(lubridate::today(time_zone) - 2)
   # What day was yesterday, according to the computer's system clock?
-  current <- as.Date(today(time_zone) - 1)
+  current <- as.Date(lubridate::today(time_zone) - 1)
 
   # When do we want to start the ET calculations, need to back up for the
   # filter window to work properly
-  begin <- ymd_hms(paste(previous, "12:30:00", sep = ""),
+  begin <- lubridate::ymd_hms(paste0(previous, "12:30:00"),
                    tz = "Asia/Manila", quiet = TRUE)
   # When do we want to end the ET calculations
-  end <- ymd_hms(paste(current, "16:00:00", sep = ""), tz = "Asia/Manila",
+  end <- lubridate::ymd_hms(paste0(current, "16:00:00"), tz = "Asia/Manila",
                  quiet = TRUE)
 
   # find file in directory that matches the current date
-  current_file <- ldply(list.files(directory,
+  current_file <- plyr::ldply(list.files(directory,
                                    pattern = paste("?[[:graph:]]+.flux_",
                                                    substr(current, 1, 4), "_",
                                                    substr(current, 6, 7), "_",
@@ -64,7 +69,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
 
   # import table of data for previous day, maybe necessary to fill
   # gap at begining of 24hr period
-  previous_file <- ldply(list.files(directory,
+  previous_file <- plyr::ldply(list.files(directory,
                                    pattern = paste("?[[:graph:]]+.flux_",
                                                    substr(previous, 1, 4), "_",
                                                    substr(previous, 6, 7), "_",
@@ -83,7 +88,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
     stop("You do not have eddy covariance data for the current time-period, or your computer's system time is not correct. Please check the directory where the files are located for files with time-stamp names that include yesterday's and the day before yesterday's date. Also make sure your system clock is set to the proper time, date and time zone 'Asia/Manila PHT'.")
 
   # format column 1 to be date/time in R
-  data_day[, 1] <- ymd_hms(data_day[, 1], tz = "Asia/Manila", quiet = TRUE)
+  data_day[, 1] <- lubridate::ymd_hms(data_day[, 1], tz = "Asia/Manila", quiet = TRUE)
   # create dataframe of only the columns necessary for filling and filtering
   data_day <- data_day[, c(1, 5, 62)]
 
@@ -97,31 +102,33 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
   # a linear interpolation from the zoo package
   if (any(w)) {
     # convert the data frame to a zoo object for gap filling
-    data_zoo <- zoo(data_day)
+    data_zoo <- zoo::zoo(data_day)
     # are there gaps in the LE data? If yes we fill them
     if (any(is.na(data_zoo[, 2]))) {
       # fill any gaps in LE
-      data_zoo[, 2] <- na.approx(data_zoo[, 2])
+      data_zoo[, 2] <- zoo::na.approx(data_zoo[, 2])
     }
     # are there gaps in the T data? If yes we fill them
     if (any(is.na(data_zoo[, 3]))) {
-      data_zoo[, 3] <- na.approx(data_zoo[, 3])
+      data_zoo[, 3] <- zoo::na.approx(data_zoo[, 3])
       # fill any gaps in T
     }
 
     # apply hampel filter, 4 value window, default threshold
     # to the gap-filled data to remove outliers
-    filtered_LE <- hampel(as.numeric(coredata(data_zoo[, 2])), 4, t0 = 3)
+    filtered_LE <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 2])), 4, 
+                                  t0 = 3)
     # apply hampel filter, 4 value window, default threshold to the gap-filled
     # data to remove outliers
-    filtered_T  <- hampel(as.numeric(coredata(data_zoo[, 3])), 4, t0 = 3)
+    filtered_T  <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 3])), 4, 
+                                  t0 = 3)
   } else {
     # there are no missing values, no imputation necessary so we
     # move on and only run the filter
     # apply hampel filter, 4 value window, default threshold to remove outliers
-    filtered_LE <- hampel(data_day[, 2], 4, t0 = 3)
+    filtered_LE <- pracma::hampel(data_day[, 2], 4, t0 = 3)
     # apply hampel filter, 4 value window, default threshold to remove outliers
-    filtered_T  <- hampel(data_day[, 3], 4, t0 = 3)
+    filtered_T  <- pracma::hampel(data_day[, 3], 4, t0 = 3)
   }
 
   cleaned <- data.frame(data_day[c(8:55), 1],
@@ -134,13 +141,13 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                       "Filtered_T", "Unfiltered_T")
 
   # calculate et values for each 0.5hr unit
-  cleaned <- mutate(cleaned, et = Filtered_LE / (2500 - 2.4 * Filtered_T) * 3.6)
+  cleaned <- dplyr::mutate(cleaned, et = Filtered_LE / (2500 - 2.4 * Filtered_T) * 3.6)
 
   daily_et <- mean(cleaned$et)/2
 
   # write the data into a .csv file for saving
-  write.csv(cleaned, paste(directory, "/cleaned/",
-                           substr(end, 1, 10), ".csv", sep = ""))
+  write.csv(cleaned, paste0(directory, "/cleaned/",
+                           substr(end, 1, 10), ".csv"))
 
   # return the ET calculation value
   cat(paste("The daily ET value is ", round(daily_et, 2), ".", sep = ""))
