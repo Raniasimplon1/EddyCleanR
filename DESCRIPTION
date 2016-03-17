@@ -1,4 +1,4 @@
-Package: IRRIEddyCoClean
+Package: IRRIEddyClean
 Type: Package
 Title: Functions to filter and gap fill eddy covariance data
 Version: 0.2
