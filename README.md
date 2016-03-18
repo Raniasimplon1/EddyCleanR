@@ -1,7 +1,7 @@
-IRRI EddyCo Gap Fill and Outlier Removal
+IRRI Eddy Covariance Gap Fill and Outlier Removal and et Calculation
 ========================================
 
-This repository is an R package used to clean eddy covariance tower data from IRRI Ecological Intensification (EI) platform. 
+This repository is an R package, IRRIEddyClean, used to clean eddy covariance tower data from IRRI Ecological Intensification (EI) platform. 
 
 The IRRI Ecological Intensification platform is a field laboratory where probable futuristic rice production systems are developed and researched. The EI platform makes use of mechanization in rice production in conjunction with efficient irrigation, which this script is used for, and for the study of intensification and diversification of cropping systems and scheduling. The EI aims to produce three crops per year, two rice crops in rotation with a third non-rice crop (maize or mung bean) while being environmentally and ecologically sustainable.
 
