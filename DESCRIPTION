@@ -2,7 +2,6 @@ Package: IRRIEddyClean
 Type: Package
 Title: Functions to filter and gap fill eddy covariance data and calcualte et.
 Version: 1.2.1
-Date: 2015-06-23
 Authors@R: person("Adam", "Sparks", email = "adamhsparks@gmail.com",
   role = c("aut", "cre"))
 Maintainer: Adam H Sparks, <adamhsparks@gmail.com>
