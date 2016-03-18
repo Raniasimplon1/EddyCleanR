@@ -23,81 +23,76 @@
 #' }
 #'
 #'@export
-
 clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                           time_zone = "Asia/Manila"){
-
-  
-  Filtered_LE <- Filtered_T <-NULL
-  
+  Filtered_LE <- Filtered_T <- NULL
   setwd(directory)
-
   # check to see if cleaned directory exists, if not create
   if(file.exists("cleaned") == FALSE) dir.create("cleaned")
-
   # Determine where we are in time and space
   options(tz = time_zone)
   Sys.setenv(TZ = time_zone)
-
   # The filenaming convention means that we have to go back to previous for
   # the date, to determine the file from current
   # What day was the day before yesterday, according to the system clock?
   previous <- as.Date(lubridate::today(time_zone) - 2)
   # What day was yesterday, according to the computer's system clock?
   current <- as.Date(lubridate::today(time_zone) - 1)
-
   # When do we want to start the ET calculations, need to back up for the
   # filter window to work properly
   begin <- lubridate::ymd_hms(paste0(previous, "12:30:00"),
-                   tz = "Asia/Manila", quiet = TRUE)
+                              tz = "Asia/Manila", quiet = TRUE)
   # When do we want to end the ET calculations
   end <- lubridate::ymd_hms(paste0(current, "16:00:00"), tz = "Asia/Manila",
-                 quiet = TRUE)
-
+                            quiet = TRUE)
   # find file in directory that matches the current date
   current_file <- plyr::ldply(list.files(directory,
-                                   pattern = paste("?[[:graph:]]+.flux_",
-                                                   substr(current, 1, 4), "_",
-                                                   substr(current, 6, 7), "_",
-                                                   substr(current, 9, 10),
-                                                   "[[:graph:]]+.dat$",
-                                                   sep = "")),
-                        read.table,
-                        skip = 4,
-                        na.strings = "NAN",
-                        sep = ",")
-
+                                         pattern = paste("?[[:graph:]]+.flux_",
+                                                         substr(current, 1, 4),
+                                                         "_",
+                                                         substr(current, 6, 7),
+                                                         "_",
+                                                         substr(current, 9, 10),
+                                                         "[[:graph:]]+.dat$",
+                                                         sep = "")),
+                              read.table,
+                              skip = 4,
+                              na.strings = "NAN",
+                              sep = ",")
   # import table of data for previous day, maybe necessary to fill
   # gap at begining of 24hr period
   previous_file <- plyr::ldply(list.files(directory,
-                                   pattern = paste("?[[:graph:]]+.flux_",
-                                                   substr(previous, 1, 4), "_",
-                                                   substr(previous, 6, 7), "_",
-                                                   substr(previous, 9, 10),
-                                                   "[[:graph:]]+.dat$",
-                                                   sep = "")),
-                         read.table,
-                         skip = 4,
-                         na.strings = "NAN",
-                         sep = ",")
-
+                                          pattern =
+                                            paste0("?[[:graph:]]+.flux_",
+                                                   substr(previous,
+                                                          1, 4), "_",
+                                                   substr(previous,
+                                                          6, 7), "_",
+                                                   substr(previous,
+                                                          9, 10),
+                                                   "[[:graph:]]+.dat$")),
+                               read.table,
+                               skip = 4,
+                               na.strings = "NAN",
+                               sep = ",")
   # combine the two files into one data frame
   data_day <- rbind(previous_file, current_file)
-
   if (length(data_day[, 1]) == 0)
-    stop("You do not have eddy covariance data for the current time-period, or your computer's system time is not correct. Please check the directory where the files are located for files with time-stamp names that include yesterday's and the day before yesterday's date. Also make sure your system clock is set to the proper time, date and time zone 'Asia/Manila PHT'.")
-
+    stop("You do not have eddy covariance data for the current time-period, or
+         your computer's system time is not correct. Please check the directory
+         where the files are located for files with time-stamp names that
+         include yesterday's and the day before yesterday's date. Also make
+         sure your system clock is set to the proper time, date and time zone
+         'Asia/Manila PHT'.")
   # format column 1 to be date/time in R
-  data_day[, 1] <- lubridate::ymd_hms(data_day[, 1], tz = "Asia/Manila", quiet = TRUE)
+  data_day[, 1] <- lubridate::ymd_hms(data_day[, 1], tz = "Asia/Manila",
+                                      quiet = TRUE)
   # create dataframe of only the columns necessary for filling and filtering
   data_day <- data_day[, c(1, 5, 62)]
-
   # assign names to keep things straight
   names(data_day) <- c("Date", "LE", "Temperature")
-
   # check for any missing values in the data
   w <- sapply(data_day, function(x) any(is.na(x)))
-
   # if there are missing values, we fill them using na.approx,
   # a linear interpolation from the zoo package
   if (any(w)) {
@@ -113,14 +108,13 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
       data_zoo[, 3] <- zoo::na.approx(data_zoo[, 3])
       # fill any gaps in T
     }
-
     # apply hampel filter, 4 value window, default threshold
     # to the gap-filled data to remove outliers
-    filtered_LE <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 2])), 4, 
+    filtered_LE <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 2])), 4,
                                   t0 = 3)
     # apply hampel filter, 4 value window, default threshold to the gap-filled
     # data to remove outliers
-    filtered_T  <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 3])), 4, 
+    filtered_T  <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 3])), 4,
                                   t0 = 3)
   } else {
     # there are no missing values, no imputation necessary so we
@@ -130,27 +124,21 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
     # apply hampel filter, 4 value window, default threshold to remove outliers
     filtered_T  <- pracma::hampel(data_day[, 3], 4, t0 = 3)
   }
-
   cleaned <- data.frame(data_day[c(8:55), 1],
                         filtered_LE$y[c(8:55)],
                         data_day[c(8:55), 2],
                         filtered_T$y[c(8:55)],
                         data_day[c(8:55), 3])
-
   names(cleaned) <- c("Date", "Filtered_LE", "Unfiltered_LE",
                       "Filtered_T", "Unfiltered_T")
-
   # calculate et values for each 0.5hr unit
-  cleaned <- dplyr::mutate(cleaned, et = Filtered_LE / (2500 - 2.4 * Filtered_T) * 3.6)
-
-  daily_et <- mean(cleaned$et)/2
-
+  cleaned <- dplyr::mutate(cleaned, et = Filtered_LE /
+                             (2500 - 2.4 * Filtered_T) * 3.6)
+  daily_et <- mean(cleaned$et) / 2
   # write the data into a .csv file for saving
   write.csv(cleaned, paste0(directory, "/cleaned/",
-                           substr(end, 1, 10), ".csv"))
-
+                            substr(end, 1, 10), ".csv"))
   # return the ET calculation value
   cat(paste("The daily ET value is ", round(daily_et, 2), ".", sep = ""))
 }
-
 #eos
