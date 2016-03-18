@@ -6,7 +6,7 @@ Authors@R: person("Adam", "Sparks", email = "adamhsparks@gmail.com",
   role = c("aut", "cre"))
 Maintainer: Adam H Sparks, <adamhsparks@gmail.com>
 Description: This package provides functions to filter and gap fill eddy
-    covariance data to calcuate evapotranspiration (ET) values. The
+    covariance data to calcuate evapotranspiration (et) values. The
     International Rice Research Institute (IRRI) uses it to calculate
     irrigation needs for the Ecological Intensification research platform.
 Depends:
@@ -18,5 +18,5 @@ Imports:
     plyr,
     dplyr,
     zoo,
-    lubridate,
+    lubridate
 RoxygenNote: 5.0.1
