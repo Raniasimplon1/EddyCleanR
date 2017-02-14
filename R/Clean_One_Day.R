@@ -1,6 +1,6 @@
-#' @title Clean One Day (24 hour) Eddy Covariance Data File
+#' @title Clean a one day (24 hour) eddy covariance data file
 #'
-#'@description This function automates filtering and gap filling of eddy-
+#'@description This function automates filtering and gap filling of eddy
 #'covariance data from the IRRI Ecological Intensification Platform for
 #'calculating evapotranspiration for irrigation scheduling. This function
 #'checks a specified directory for the most recent data file from the eddy

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Clean_One_Day.R
 \name{clean_one_day}
 \alias{clean_one_day}
-\title{Clean One Day (24 hour) Eddy Covariance Data File}
+\title{Clean a one day (24 hour) eddy covariance data file}
 \usage{
 clean_one_day(directory = "~/Eddy Covariance Data/",
   time_zone = "Asia/Manila")
@@ -16,7 +16,7 @@ Manila for IRRI HQ. Should not be changed unless you know what you are doing
 and are outside of IRRI HQ}
 }
 \description{
-This function automates filtering and gap filling of eddy-
+This function automates filtering and gap filling of eddy
 covariance data from the IRRI Ecological Intensification Platform for
 calculating evapotranspiration for irrigation scheduling. This function
 checks a specified directory for the most recent data file from the eddy

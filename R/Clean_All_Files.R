@@ -1,4 +1,4 @@
-#' @title Clean all eddy covariance data files
+#' @title Clean all eddy covariance data files in a directory
 #'
 #' @description This function automates filtering and gap filling of eddy-
 #' covariance data by filling gaps using functions from zoo and uses

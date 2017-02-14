@@ -2,7 +2,7 @@
 % Please edit documentation in R/Clean_All_Files.R
 \name{clean_all_files}
 \alias{clean_all_files}
-\title{Clean all eddy covariance data files}
+\title{Clean all eddy covariance data files in a directory}
 \usage{
 clean_all_files(directory = "~/Eddy Covariance Data/",
   time_zone = "Asia/Manila")
