@@ -20,29 +20,32 @@
 #'
 #'@export
 clean_all_files <- function(directory = "~/Eddy Covariance Data/",
-                            time_zone = "Asia/Manila"){
+                            time_zone = "Asia/Manila") {
   Filtered_LE <- Filtered_T <- NULL
-  setwd( directory )
-  if(file.exists("Cleaned") == FALSE) dir.create("Cleaned")
-  filenames <- list.files(directory, pattern = ".dat$", full.names = TRUE)
+  if (!isTRUE(file.exists(paste0(directory, "/cleaned"))))
+    dir.create(paste0(directory, "/cleaned"))
+  filenames <-
+    list.files(directory, pattern = ".dat$", full.names = TRUE)
   datalist <- lapply(filenames, function(x) {
-    utils::read.table(file = x,
-               skip = 4,
-               sep = ",",
-               na.strings = "NAN")
-  }
-  )
+    utils::read.table(
+      file = x,
+      skip = 4,
+      sep = ",",
+      na.strings = "NAN"
+    )
+  })
   data_file <- Reduce(function(x, y) {
     rbind(x, y)
-    },
-    datalist)
+  },
+  datalist)
   # format column 1 to be date/time in R
   data_file[, 1] <- as.POSIXct(strptime(data_file[, 1],
                                         format = "%Y-%m-%d %H:%M:%S"))
   # create dataframe of only the columns necessary for filling and filtering
   data_i <- data_file[, c(1, 5, 62)]
   # check for any missing values in the data
-  w <- sapply(data_i, function(x) any(is.na(x)))
+  w <- sapply(data_i, function(x)
+    any(is.na(x)))
   if (any(w)) {
     # if there are missing values, we fill them using zoo::na.approx,
     # a linear interpolation from the zoo package
@@ -58,21 +61,23 @@ clean_all_files <- function(directory = "~/Eddy Covariance Data/",
     }
     # apply hampel filter, 4 value window, default threshold
     # to the gap-filled data to remove outliers
-    Filtered_LE <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 2])), 4,
-                                  t0 = 3)
+    Filtered_LE <-
+      pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 2])), 4,
+                     t0 = 3)
     # apply hampel filter, 4 value window, default threshold to the gap-filled
-    #data to remove outliers
-    Filtered_T  <- pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 3])), 4,
-                                  t0 = 3)
+    # data to remove outliers
+    Filtered_T  <-
+      pracma::hampel(as.numeric(zoo::coredata(data_zoo[, 3])), 4,
+                     t0 = 3)
   } else {
     # there are no missing values, no imputation necessary so we move on
-    #and only run the filter
+    # and only run the filter
     # apply hampel filter, 4 value window, default threshold to remove outliers
     Filtered_LE <- pracma::hampel(data_i[, 2], 4, t0 = 3)
     # apply hampel filter, 4 value window, default threshold to remove outliers
     Filtered_T  <- pracma::hampel(data_i[, 3], 4, t0 = 3)
   }
-  Cleaned <- data.frame(data_i[, 1],
+  cleaned <- data.frame(data_i[, 1],
                         Filtered_LE$y,
                         data_i[, 2],
                         Filtered_T$y,
@@ -80,14 +85,18 @@ clean_all_files <- function(directory = "~/Eddy Covariance Data/",
                         # w/ cleaned/uncleaned data
                         data_i[, 3])
   # name columns properly
-  names(Cleaned) <- c("Date", "Filtered_LE", "UnFiltered_LE",
-                      "Filtered_T", "UnFiltered_T")
+  names(cleaned) <- c("Date",
+                      "Filtered_LE",
+                      "UnFiltered_LE",
+                      "Filtered_T",
+                      "UnFiltered_T")
   # Calculate et values for each .5hr unit
-  Cleaned <- dplyr::mutate(Cleaned, et = Filtered_LE /
-                            (2500 - 2.4 * Filtered_T) * 3.6)
+  cleaned <- dplyr::mutate(cleaned, et = Filtered_LE /
+                             (2500 - 2.4 * Filtered_T) * 3.6)
   # write the data into a .csv file for saving
-  utils::write.csv(Cleaned, paste(directory,
-                           "/Cleaned/Cleaned_Data.csv", sep = ""),
-            row.names = FALSE)
+  utils::write.csv(cleaned,
+                   paste0(directory,
+                          "/cleaned/cleaned_Data.csv", sep = ""),
+                   row.names = FALSE)
 }
 #eos
