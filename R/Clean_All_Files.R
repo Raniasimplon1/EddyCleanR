@@ -26,7 +26,7 @@ clean_all_files <- function(directory = "~/Eddy Covariance Data/",
   if(file.exists("Cleaned") == FALSE) dir.create("Cleaned")
   filenames <- list.files(directory, pattern = ".dat$", full.names = TRUE)
   datalist <- lapply(filenames, function(x) {
-    read.table(file = x,
+    utils::read.table(file = x,
                skip = 4,
                sep = ",",
                na.strings = "NAN")
@@ -86,7 +86,7 @@ clean_all_files <- function(directory = "~/Eddy Covariance Data/",
   Cleaned <- dplyr::mutate(Cleaned, et = Filtered_LE /
                             (2500 - 2.4 * Filtered_T) * 3.6)
   # write the data into a .csv file for saving
-  write.csv(Cleaned, paste(directory,
+  utils::write.csv(Cleaned, paste(directory,
                            "/Cleaned/Cleaned_Data.csv", sep = ""),
             row.names = FALSE)
 }

@@ -1,6 +1,6 @@
-Package: IRRIEddyClean
+Package: EddyCleanR
 Type: Package
-Title: Functions to filter and gap fill eddy covariance data and calcualte et.
+Title: Functions to filter and gap fill eddy covariance data and calculate et values
 Version: 1.2.1
 Authors@R: person("Adam", "Sparks", email = "adamhsparks@gmail.com",
   role = c("aut", "cre"))
@@ -11,12 +11,13 @@ Description: This package provides functions to filter and gap fill eddy
     irrigation needs for the Ecological Intensification research platform.
 Depends:
     R (>= 3.0.0)
-License: GPL (>= 3)
+License: MIT + file LICENSE
 LazyData: TRUE
 Imports:
     pracma,
     plyr,
     dplyr,
     zoo,
-    lubridate
-RoxygenNote: 5.0.1
+    lubridate,
+    utils
+RoxygenNote: 6.0.1

@@ -55,7 +55,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                                                          substr(current, 9, 10),
                                                          "[[:graph:]]+.dat$",
                                                          sep = "")),
-                              read.table,
+                              utils::read.table,
                               skip = 4,
                               na.strings = "NAN",
                               sep = ",")
@@ -71,7 +71,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                                                    substr(previous,
                                                           9, 10),
                                                    "[[:graph:]]+.dat$")),
-                               read.table,
+                               utils::read.table,
                                skip = 4,
                                na.strings = "NAN",
                                sep = ",")
@@ -136,7 +136,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                              (2500 - 2.4 * Filtered_T) * 3.6)
   daily_et <- mean(cleaned$et) / 2
   # write the data into a .csv file for saving
-  write.csv(cleaned, paste0(directory, "/cleaned/",
+  utils::write.csv(cleaned, paste0(directory, "/cleaned/",
                             substr(end, 1, 10), ".csv"))
   # return the ET calculation value
   cat(paste("The daily ET value is ", round(daily_et, 2), ".", sep = ""))

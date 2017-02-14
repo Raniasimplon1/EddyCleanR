@@ -28,4 +28,3 @@ clean_all_files(directory = "~/Eddy Covariance Data/")
 }
 
 }
-

@@ -32,4 +32,3 @@ clean_one_day(directory = "~/Eddy Covariance Data/")
 }
 
 }
-
