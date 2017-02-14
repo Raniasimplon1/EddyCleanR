@@ -1,8 +1,8 @@
 IRRI Eddy Covariance Gap Fill and Outlier Removal and et Calculation
 ========================================
 
-[![Travis-CI Build Status](https://travis-ci.org/adamhsparks/EddyCleanr.svg?branch=master)](https://travis-ci.org/adamhsparks/EddyCleanR)
-
+[![Travis-CI Build Status](https://travis-ci.org/adamhsparks/EddyCleanR.svg?branch=master)](https://travis-ci.org/adamhsparks/EddyCleanR)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/adamhsparks/EddyCleanR?branch=master&svg=true)](https://ci.appveyor.com/project/adamhsparks/EddyCleanR)
 
 EddyCleanR is used to clean eddy covariance tower data from IRRI Ecological Intensification (EI) platform. 
 
