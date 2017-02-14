@@ -9,6 +9,8 @@ Description: This package provides functions to filter and gap fill eddy
     covariance data to calcuate evapotranspiration (et) values. The
     International Rice Research Institute (IRRI) uses it to calculate
     irrigation needs for the Ecological Intensification research platform.
+URL: https://github.com/adamhsparks/EddyCleanR
+BugReports: https://github.com/adamhsparks/EddyCleanR/issues
 Depends:
     R (>= 3.0.0)
 License: MIT + file LICENSE
