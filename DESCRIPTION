@@ -1,9 +1,12 @@
 Package: EddyCleanR
 Type: Package
-Title: Functions to filter and gap fill eddy covariance data and calculate et values
-Version: 1.2.1
-Authors@R: person("Adam", "Sparks", email = "adamhsparks@gmail.com",
-  role = c("aut", "cre"))
+Title: Functions to Filter and Gap Fill Eddy Covariance Data and Calculate et Values
+Version: 1.2.2
+Date: 2017-06-13
+Authors@R: person("Adam", "Sparks", 
+  email = "adamhsparks@gmail.com",
+  role = c("aut", "cre"),
+  comment = "http://orcid.org/0000-0002-0061-8359")
 Maintainer: Adam H Sparks, <adamhsparks@gmail.com>
 Description: This package provides functions to filter and gap fill eddy
     covariance data to calcuate evapotranspiration (et) values. The
@@ -17,7 +20,7 @@ License: MIT + file LICENSE
 LazyData: TRUE
 Imports:
     pracma,
-    plyr,
+    purrr,
     dplyr,
     zoo,
     lubridate,

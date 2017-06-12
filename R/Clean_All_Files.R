@@ -44,8 +44,7 @@ clean_all_files <- function(directory = "~/Eddy Covariance Data/",
   # create dataframe of only the columns necessary for filling and filtering
   data_i <- data_file[, c(1, 5, 62)]
   # check for any missing values in the data
-  w <- sapply(data_i, function(x)
-    any(is.na(x)))
+  w <- purrr::map(.x = data_i, .f =  function(x) any(is.na(x)))
   if (any(w)) {
     # if there are missing values, we fill them using zoo::na.approx,
     # a linear interpolation from the zoo package

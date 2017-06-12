@@ -49,7 +49,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
                        tz = "Asia/Manila",
                        quiet = TRUE)
   # find file in directory that matches the current date
-  current_file <- plyr::ldply(
+  current_file <- purrr::map(
     list.files(
       directory,
       pattern = paste(
@@ -70,7 +70,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
   )
   # import table of data for previous day, maybe necessary to fill
   # gap at begining of 24hr period
-  previous_file <- plyr::ldply(
+  previous_file <- purrr::map(
     list.files(
       directory,
       pattern =
@@ -112,8 +112,7 @@ clean_one_day <- function(directory = "~/Eddy Covariance Data/",
   # assign names to keep things straight
   names(data_day) <- c("Date", "LE", "Temperature")
   # check for any missing values in the data
-  w <- sapply(data_day, function(x)
-    any(is.na(x)))
+  w <- purrr::map(.x = data_day, .x = function(x) any(is.na(x)))
   # if there are missing values, we fill them using na.approx,
   # a linear interpolation from the zoo package
   if (any(w)) {

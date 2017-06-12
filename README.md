@@ -1,3 +1,4 @@
+
 IRRI Eddy Covariance Gap Fill and Outlier Removal and et Calculation
 ========================================
 
@@ -10,17 +11,11 @@ The IRRI Ecological Intensification platform is a field laboratory where probabl
 
 ## Quick start
 
-Install the devtools package, available from CRAN.
-
-`install.packages("devtools")`
-
-Load the devtools package.
-
-`library(devtools)`
-
-Use `install_github("author/package")` to install this package.
-
-`install_github("adamhsparks/EddyCleanR")`
+```r
+install.packages("devtools")  
+library(devtools)  
+install_github("adamhsparks/EddyCleanR")  
+```
 
 # Meta
 
@@ -30,4 +25,3 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 1. Hans Werner Borchers (2014). pracma: Practical Numerical Math Functions. R package version 1.7.0. http://CRAN.R-project.org/package=pracma
 2. Achim Zeileis and Gabor Grothendieck (2005). zoo: S3 Infrastructure for Regular and Irregular Time Series. Journal of Statistical Software, 14(6), 1-27. URL http://www.jstatsoft.org/v14/i06/
 3. R Core Team (2014). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL http://www.R-project.org/.
-
