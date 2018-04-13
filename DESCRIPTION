@@ -4,7 +4,7 @@ Title: Functions to Filter and Gap Fill Eddy Covariance Data and Calculate et Va
 Version: 1.2.2
 Authors@R: person("Adam", "Sparks", role = c("aut", "cre"),
     email = "adamhsparks@gmail.com",
-    comment = c(ORCID = "0000-0002-0061-8359")
+    comment = c(ORCID = "0000-0002-0061-8359"))
 Maintainer: Adam H Sparks, <adamhsparks@gmail.com>
 Description: This package provides functions to filter and gap fill eddy
     covariance data to calcuate evapotranspiration (et) values. The
